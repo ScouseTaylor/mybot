@@ -1,39 +1,172 @@
-<script>
-  const CLIENT_KEY = 'sbawpmerm4ct43lxx9';
-  const REDIRECT_URI = 'https://airplane-andreas-bin-campbell.trycloudflare.com/tiktok/callback';
-  const SCOPES = 'user.info.basic,video.list';
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
 
-  function randomState() {
-    const bytes = new Uint8Array(32);
-    crypto.getRandomValues(bytes);
-    return Array.from(bytes, b =>
-      b.toString(16).padStart(2, '0')
-    ).join('');
-  }
+  <title>Connect TikTok - Discord TikTok Notifications</title>
 
-  document.getElementById('connect').addEventListener('click', () => {
-    const pageParams = new URLSearchParams(window.location.search);
-    const username = pageParams.get('username');
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 760px;
+      margin: 60px auto;
+      padding: 0 20px;
+      line-height: 1.6;
+      color: #222;
+      background: #fafafa;
+    }
 
-    const random = randomState();
+    .card {
+      background: #fff;
+      padding: 28px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+    }
 
-    const state = username
-      ? `${username}__${random}`
-      : random;
+    h1 {
+      margin-top: 0;
+      color: #111;
+    }
 
-    sessionStorage.setItem('tiktok_oauth_state', state);
+    button {
+      background: #fe2c55;
+      color: #fff;
+      border: 0;
+      border-radius: 8px;
+      padding: 14px 22px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
 
-    const oauthParams = new URLSearchParams({
-      client_key: CLIENT_KEY,
-      response_type: 'code',
-      scope: SCOPES,
-      redirect_uri: REDIRECT_URI,
-      state,
-      disable_auto_auth: '1'
-    });
+    button:hover {
+      opacity: .92;
+    }
 
-    window.location.href =
-      'https://www.tiktok.com/v2/auth/authorize/?' +
-      oauthParams.toString();
-  });
-</script>
+    .small {
+      font-size: 14px;
+      color: #555;
+    }
+
+    code {
+      background: #f3f3f3;
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+
+    <h1>Discord TikTok Notifications</h1>
+
+    <p>
+      Connect your TikTok account so the integration can identify
+      your account and read your public videos.
+    </p>
+
+    <p class="small">
+      Requested permissions:
+      <code>user.info.basic</code>
+      and
+      <code>video.list</code>.
+    </p>
+
+    <button id="connect">
+      Connect TikTok
+    </button>
+
+    <p class="small">
+      You will be sent to TikTok to log in and approve access.
+    </p>
+
+  </div>
+
+  <script>
+    const CLIENT_KEY = 'sbawpmerm4ct43lxx9';
+
+    const REDIRECT_URI =
+      'https://airplane-andreas-bin-campbell.trycloudflare.com/tiktok/callback';
+
+    const SCOPES =
+      'user.info.basic,video.list';
+
+
+    function randomState() {
+
+      const bytes =
+        new Uint8Array(32);
+
+      crypto.getRandomValues(bytes);
+
+      return Array.from(
+        bytes,
+        b => b.toString(16).padStart(2, '0')
+      ).join('');
+    }
+
+
+    document
+      .getElementById('connect')
+      .addEventListener('click', () => {
+
+        const pageParams =
+          new URLSearchParams(
+            window.location.search
+          );
+
+        const username =
+          pageParams.get('username');
+
+        if (!username) {
+          alert(
+            'This connection link is missing the TikTok username.'
+          );
+
+          return;
+        }
+
+
+        const random =
+          randomState();
+
+        const state =
+          `${username}__${random}`;
+
+        sessionStorage.setItem(
+          'tiktok_oauth_state',
+          state
+        );
+
+
+        const oauthParams =
+          new URLSearchParams({
+
+            client_key: CLIENT_KEY,
+
+            response_type: 'code',
+
+            scope: SCOPES,
+
+            redirect_uri:
+              REDIRECT_URI,
+
+            state: state,
+
+            disable_auto_auth: '1'
+
+          });
+
+
+        window.location.href =
+          'https://www.tiktok.com/v2/auth/authorize/?'
+          + oauthParams.toString();
+
+      });
+  </script>
+
+</body>
+</html>
