@@ -35,7 +35,10 @@
     }
 
     document.getElementById('connect').addEventListener('click', () => {
-      const state = randomState();
+      const params = new URLSearchParams(window.location.search);
+const username = params.get('username');
+
+const state = username || randomState();
       sessionStorage.setItem('tiktok_oauth_state', state);
 
       const params = new URLSearchParams({
