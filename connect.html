@@ -38,7 +38,10 @@
       const params = new URLSearchParams(window.location.search);
 const username = params.get('username');
 
-const state = username || randomState();
+const random = randomState();
+const state = username
+  ? `${username}__${random}`
+  : random;
       sessionStorage.setItem('tiktok_oauth_state', state);
 
       const params = new URLSearchParams({
